@@ -1,0 +1,1529 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link th:href="@{/css/config.css}" rel="stylesheet">
+
+    <link th:href="@{/vendor/fontawesome-free/css/all.min.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/css/sb-admin-2.min.css}" rel="stylesheet">
+    <link th:href="@{/vendor/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+
+    <meta charset="UTF-8">
+    <title>Registros</title>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark justify-content-between">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" th:href="@{/}">Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link">Registro para usuarios</a>
+                </li>
+                <li>
+                    <a class="nav-link" aria-current="page" href="#" th:text="${session.persona.first_name}"></a>
+                </li>
+                <li>
+                    <a class="nav-link" aria-current="page" href="#" th:href="@{/logout}">Cerrar Sesión</a>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+</nav>
+
+<div class="container">
+    <div class="row">
+        <br/><br/>
+    </div>
+
+    <ul class="nav nav-tabs nav-justified">
+        <li class="nav-item">
+            <a class="nav-link active" data-bs-toggle="tab" href="#registroPersonas">Registro Personas</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" href="#consultaPersonas">Consulta Personas</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" href="#registroProductos">Registro Productos</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" href="#consultaProductos">Consulta Productos</a>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="registroPersonas">
+            <div class="row mt-5">
+                <div class="col-3">
+                    <div class="card ">
+                        <h5 class="card-header bg-dark text-white">Registrar Estado</h5>
+                        <div class="card-body">
+                            <form th:action="@{/guardar/estado}" method="post">
+                                <div class="mb-3">
+                                    <input type="hidden" name="idEstado" th:value="0"/>
+                                    <label for="nombreEstado" class="col-form-label">Nombre del Estado:</label>
+                                    <input type="text" name="nombreEstado" class="form-control" id="nombreEstado"
+                                           required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Guardar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="card ">
+                        <h5 class="card-header bg-dark text-white">Registrar Ciudad</h5>
+                        <div class="card-body">
+                            <form th:action="@{/guardar/ciudad}" method="post">
+
+                                <div class="mb-3">
+                                    <label for="nombreEstado" class="col-form-label">Estado:</label>
+                                    <select class="form-control" name="listaEstados" required="required">
+                                        <option value="">Selecciona un estado...</option>
+                                        <option th:each="estado: ${estados}" th:text="${estado.state_name}"
+                                                th:value="${estado.id_state}">
+                                    </select>
+                                    <label for="nombreCiudad" class="col-form-label">Nombre la ciudad:</label>
+                                    <input type="hidden" name="idCiudad" th:value="0"/>
+                                    <input type="text" name="nombreCiudad" class="form-control" id="nombreCiudad"
+                                           required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Guardar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="card ">
+                        <h5 class="card-header bg-dark text-white">Registrar Rol</h5>
+                        <div class="card-body">
+                            <form th:action="@{/guardar/rol}" method="post">
+                                <div class="mb-3">
+                                    <input type="hidden" name="idRol" th:value="0"/>
+                                    <label for="nombreRol" class="col-form-label">Nombre del Rol:</label>
+                                    <input type="text" name="nombreRol" class="form-control" id="nombreRol" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Guardar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <br/><br/>
+            <div class="row">
+                <div class="col-6">
+                    <div class="card ">
+                        <h5 class="card-header bg-dark text-white">Registrar Persona</h5>
+                        <form th:action="@{/guardar/persona}" method="post">
+                            <div class="card-body">
+                                <div class="row">
+                                    <input type="hidden" name="idDireccion" value="0"/>
+                                    <input type="hidden" name="idPersona" value="0"/>
+                                    <input type="hidden" name="idUsuario" value="0"/>
+                                    <label for="nombreUsuario" class="col-form-label">Tipo de entidad:</label>
+                                </div>
+                                <div class="row">
+                                    <div class="col-5">
+
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="tipoPersona"
+                                                   id="inlineRadio1"
+                                                   value="1" required checked>
+                                            <label class="form-check-label" for="inlineRadio1">Usuario</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="tipoPersona"
+                                                   id="inlineRadio2"
+                                                   value="2" required>
+                                            <label class="form-check-label" for="inlineRadio2">Cliente</label>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-5">
+                                        <label for="nombreUsuario" class="col-form-label">Nombre:</label>
+                                        <input type="text" name="nombreUsuario" class="form-control" id="nombreUsuario"
+                                               required>
+                                    </div>
+                                    <div class="col-7">
+                                        <label for="apellidosUsuario" class="col-form-label">Apellidos:</label>
+                                        <input type="text" name="apellidosUsuario" class="form-control"
+                                               id="apellidosUsuario"
+                                               required>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-5">
+                                        <label for="nacimientoUsuario" class="col-form-label">Fecha de
+                                            nacimiento:</label>
+                                        <input type="date" name="nacimientoUsuario" class="form-control"
+                                               id="nacimientoUsuario"
+                                               required>
+                                    </div>
+                                    <div class="col-7">
+                                        <label for="emailUsuario" class="col-form-label">Correo Electrónico:</label>
+                                        <input type="email" name="emailUsuario" class="form-control" id="emailUsuario"
+                                               required>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label for="estadoUsuario" class="col-form-label">Estado:</label>
+                                        <select class="form-control" name="estadoUsuario" id="estadoUsuario"
+                                                required="required">
+                                            <option value="">Selecciona un estado...</option>
+                                            <!--<option th:each="estado: ${estados}" th:text="${estado.state_name}"
+                                                    th:value="${estado.id_state}"></option> -->
+                                        </select>
+
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="ciudadUsuario2" class="col-form-label">Ciudad:</label>
+                                        <select class="form-control" name="ciudadUsuario2" id="ciudadUsuario2"
+                                                required="required">
+                                            <option value="">Selecciona una ciudad...</option>
+                                        </select>
+                                       <!-- <select class="form-control" name="ciudadUsuario" id="ciudadUsuario">
+                                            <option th:each="ciudad: ${ciudades}" th:text="${ciudad.city_name}"
+                                                    th:value="${ciudad.id_city}"
+                                                    th:class="'estado_'+${ciudad.id_state.id_state}"></option>
+
+                                        </select> -->
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-8">
+                                        <label for="calleUsuario" class="col-form-label">Calle:</label>
+                                        <input type="text" name="calleUsuario" class="form-control" id="calleUsuario"
+                                               required>
+                                    </div>
+                                    <div class="col-4">
+                                        <label for="numeroUsuario" class="col-form-label">Numero #:</label>
+                                        <input type="number" name="numeroUsuario" class="form-control"
+                                               id="numeroUsuario"
+                                               required>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-8">
+                                        <label for="coloniaUsuario" class="col-form-label">Colonia:</label>
+                                        <input type="text" name="coloniaUsuario" class="form-control"
+                                               id="coloniaUsuario"
+                                               required>
+                                    </div>
+                                    <div class="col-4">
+                                        <label for="codigoUsuario" class="col-form-label">Código postal:</label>
+                                        <input type="number" name="codigoUsuario" class="form-control"
+                                               id="codigoUsuario"
+                                               minlength="5" maxlength="5"
+                                               required>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row usuarioSection">
+                                    <div class="col-5">
+                                        <label for="userUsuario" class="col-form-label">Usuario:</label>
+                                        <input type="text" name="userUsuario" class="form-control" id="userUsuario"
+                                               required>
+                                    </div>
+                                    <div class="col-7">
+                                        <label for="passwordUsuario" class="col-form-label">Contraseña:</label>
+                                        <input type="password" name="passwordUsuario" class="form-control"
+                                               id="passwordUsuario"
+                                               required>
+                                    </div>
+                                </div>
+                                <div class="row usuarioSection">
+                                    <!--<div class="col-7 offset-md-5"> -->
+                                    <div class="col-11 offset-md-1">
+                                        <label class="col-form-label">Tipo de rol:</label>
+
+                                        <!-- <div class="checkbox-container"> -->
+                                        <div th:each="rol: ${roles}">
+
+                                            <div class="form-check form-switch roles">
+                                                <input class="form-check-input" type="checkbox"
+                                                       th:id="'rol_'+${rol.id_role}"
+                                                       th:name="roleUsuario" th:value="${rol.id_role}" required>
+                                                <label class="form-check-label" th:text="${rol.role_name}"></label>
+                                            </div>
+                                        </div>
+
+                                        <br/><br/>
+                                    </div>
+                                </div>
+                                <hr>
+                                <button type="submit" id="btn_usuario" class="btn btn-primary text-right">Guardar
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <br/><br/>
+                </div>
+            </div>
+
+        </div>
+        <div class="tab-pane fade " id="consultaPersonas">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card mt-5">
+                            <h5 class="card-header bg-dark text-white">Listado de Usuarios</h5>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="tablaUsuarios">
+                                        <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Usuario</th>
+                                            <th>Nombre</th>
+                                            <th>Apellidos</th>
+                                            <th>Correo electrónico</th>
+                                            <th>Editar</th>
+                                            <th>Eliminar</th>
+                                        </tr>
+                                        </thead>
+                                        <tfoot>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Usuario</th>
+                                            <th>Nombre</th>
+                                            <th>Apellidos</th>
+                                            <th>Correo electrónico</th>
+                                            <th>Editar</th>
+                                            <th>Eliminar</th>
+                                        </tr>
+                                        </tfoot>
+
+                                        <tbody>
+                                        <tr th:each="usuario, index : ${usuariosCompletos}">
+                                            <td th:text="${index.count}"></td>
+                                            <td th:text="${usuario[19]}"></td>
+                                            <td th:text="${usuario[14]}"></td>
+                                            <td th:text="${usuario[15]}"></td>
+                                            <td th:text="${usuario[13]}"></td>
+
+                                            <td class="center-cell">
+                                                <!--<a class="btn btn-outline-info" data-toggle="modal"
+                                                   th:data-target="'#modalP'+${usuario[17]}"><i
+                                                        class="bi bi-pencil"></i></a> -->
+                                                <a th:id="'usuarioEdit_'+${usuario[17]}" class="btn btn-outline-info" data-toggle="modal"
+                                                   data-target="#modalUsuariosEdit"><i
+                                                        class="bi bi-pencil" ></i></a>
+
+                                                <!-- Modal -->
+                                                <div class="modal fade bd-example-modal-lg"
+                                                     th:id="'modalP'+ ${usuario[17]}" tabindex="-1" role="dialog"
+                                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog modal-lg" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close" data-dismiss="modal"
+                                                                        aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <form th:action="@{/guardar/persona}" method="post">
+                                                                <div class="modal-body">
+                                                                    <div class="card textoIzquierda">
+                                                                        <h5 class="card-header bg-dark text-white">
+                                                                            Editar Usuario</h5>
+                                                                        <div class="card-body">
+                                                                            <div class="mb-3">
+                                                                                <input type="hidden" name="idDireccion" th:value="${usuario[5]}"/>
+                                                                                <input type="hidden" name="idPersona" th:value="${usuario[11]}"/>
+                                                                                <input type="hidden" name="idUsuario" th:value="${usuario[17]}"/>
+                                                                                        <div class="row">
+                                                                                            <div class="form-group col-6">
+                                                                                                <div class="form-check form-check-inline">
+                                                                                                    <input class="form-check-input" type="radio" name="tipoPersona" id="inlineRadio" value="1" required checked>
+                                                                                                    <label class="form-check-label" for="inlineRadio1">Usuario</label>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="row">
+                                                                                            <div class="col-4">
+                                                                                                <label for="nombreUsuario2" class="col-form-label">Nombre:</label>
+                                                                                                <input type="text" name="nombreUsuario" class="form-control" id="nombreUsuario2" th:value="${usuario[14]}" required>
+                                                                                            </div>
+                                                                                            <div class="col-5">
+                                                                                                <label for="apellidosUsuario2" class="col-form-label">Apellidos:</label>
+                                                                                                <input type="text" name="apellidosUsuario" class="form-control" id="apellidosUsuario2" th:value="${usuario[15]}" required>
+                                                                                            </div>
+                                                                                            <div class="col-3">
+                                                                                                <label for="nacimientoUsuario2" class="col-form-label">Fecha de nacimiento:</label>
+                                                                                                <input type="date" name="nacimientoUsuario" class="form-control" id="nacimientoUsuario2" th:value="${usuario[12]}" required>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="row">
+                                                                                            <div class="col-4">
+                                                                                                <label for="emailUsuario2" class="col-form-label">Correo Electrónico:</label>
+                                                                                                <input type="email" name="emailUsuario" class="form-control" id="emailUsuario2" th:value="${usuario[13]}" required>
+                                                                                            </div>
+                                                                                           <div class="col-4">
+                                                                                                <label for="estadoUsuario" class="col-form-label">Estado:</label>
+                                                                                                <select class="form-control" name="estadoUsuario" th:id="'estadoUsuario_'+${index.count}" required="required">
+                                                                                                    <option value="">Selecciona un estado...</option>
+                                                                                                    <option th:each="estado: ${estados}" th:text="${estado.state_name}"
+                                                                                                            th:value="${estado.id_state}" th:id="${index.count}+'_'+${estado.id_state}" th:selected="${estado.id_state eq usuario[0]}"></option>
+                                                                                                </select>
+                                                                                            </div>
+                                                                                            <div class="col-4">
+                                                                                                <label for="ciudadUsuario2" class="col-form-label">Ciudad:</label>
+                                                                                                <select class="form-control" name="ciudadUsuario2" th:id="'ciudad2Usuario_'+${index.count}"
+                                                                                                        required="required">
+                                                                                                    <option value="">Selecciona una ciudad...</option>
+                                                                                                </select>
+                                                                                                <!---->
+                                                                                                <select class="form-control" name="ciudadUsuario" th:id="'ciudadUsuario_'+${index.count}">
+                                                                                                    <option th:each="ciudad: ${ciudades}" th:text="${ciudad.city_name}"
+                                                                                                            th:value="${ciudad.id_city}"
+                                                                                                            th:class="${index.count}+'_'+${ciudad.id_state.id_state}"
+                                                                                                            th:selected="${ciudad.id_city eq usuario[2]}"></option>
+                                                                                                </select>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="row">
+                                                                                            <div class="col-5">
+                                                                                                <label for="calleUsuario2" class="col-form-label">Calle:</label>
+                                                                                                <input type="text" name="calleUsuario" class="form-control" id="calleUsuario2" th:value="${usuario[9]}" required>
+                                                                                            </div>
+                                                                                            <div class="col-5">
+                                                                                                <label for="coloniaUsuario2" class="col-form-label">Colonia:</label>
+                                                                                                <input type="text" name="coloniaUsuario" class="form-control" id="coloniaUsuario2" th:value="${usuario[6]}" required>
+                                                                                            </div>
+                                                                                            <div class="col-2">
+                                                                                                <label for="numeroUsuario2" class="col-form-label">Numero #:</label>
+                                                                                                <input type="number" name="numeroUsuario" class="form-control" id="numeroUsuario2" th:value="${usuario[7]}" required>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="row">
+                                                                                            <div class="col-3">
+                                                                                                <label for="codigoUsuario2" class="col-form-label">Código postal:</label>
+                                                                                                <input type="number" name="codigoUsuario" class="form-control" id="codigoUsuario2" minlength="5" maxlength="5" th:value="${usuario[8]}" required>
+                                                                                            </div>
+                                                                                            <div class="col-4">
+                                                                                                <label for="userUsuario2" class="col-form-label">Usuario:</label>
+                                                                                                <input type="text" name="userUsuario" class="form-control" id="userUsuario2" th:value="${usuario[19]}" required>
+                                                                                            </div>
+                                                                                            <div class="col-5">
+                                                                                                <label for="passwordUsuario2" class="col-form-label">Contraseña:</label>
+                                                                                                <input type="password" name="passwordUsuario" class="form-control" id="passwordUsuario2" th:value="${usuario[18]}" required>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    <div class="row">
+                                                                                        <div class="col-6 offset-md-1">
+                                                                                            <label class="col-form-label">Tipo de rol:</label>
+                                                                                            <div th:each="rol: ${roles}">
+                                                                                                <div class="form-check form-switch roles">
+                                                                                                    <input class="form-check-input" type="checkbox"
+                                                                                                           th:id="'role_'+${index.count}+'_'+${rol.id_role}"
+                                                                                                           th:name="roleUsuario" th:value="${rol.id_role}" required>
+                                                                                                    <label class="form-check-label" th:text="${rol.role_name}"></label>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="col-5">
+                                                                                            <div th:class="'persona_'+${index.count}"></div>
+                                                                                            <div th:each="rol: ${roles}">
+                                                                                                <div th:each="rolUsuario: ${rolUsuarioRelacion}">
+                                                                                                    <div th:if="${rolUsuario[0] == usuario[17] and rolUsuario[1] == rol.id_role}">
+                                                                                                        <!-- and rolUsuario[1] == rol.id_role -->
+                                                                                                       <div th:class="roles_">
+                                                                                                           <div th:class="'role_'+${index.count}+'_'+${rol.id_role}"></div>
+                                                                                                            <div class="form-check form-switch roles">
+                                                                                                                <input th:class="form-check-input" type="checkbox"
+                                                                                                                       th:id="'rol_'+${rol.id_role}"
+                                                                                                                       th:name="roleUsuario" th:value="${rol.id_role}"
+                                                                                                                        required>
+                                                                                                                       <!--th:class="'rol_'+${index.count}+'_'+${rol.id_role}"-->
+                                                                                                                <label class="form-check-label" th:text="${rol.role_name}"></label>
+                                                                                                            </div>
+                                                                                                       </div>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary"
+                                                                            data-dismiss="modal">Cerrar
+                                                                    </button>
+                                                                    <button type="submit" class="btn btn-primary">
+                                                                        Actualizar
+                                                                    </button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="center-cell">
+                                                <a th:href="@{'/eliminar/persona'+'/'+${usuario[5]}}"
+                                                   class="btn btn-outline-danger"><i class="bi bi-trash"></i></a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!--<input type="button" value="click" id="clickbtn" class="btn btn-primary">-->
+                        <!-- ===================(-MODAL EDITAR USUARIO-)=======================  -->
+
+                        <div class="modal fade bd-example-modal-lg" id="modalUsuariosEdit" tabindex="-1" role="dialog"
+                             aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal"
+                                                aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <form id="usuarioFormEdit"  method="post">
+                                        <div class="modal-body">
+                                            <div class="card textoIzquierda">
+                                                <h5 class="card-header bg-dark text-white">
+                                                    Editar Usuario</h5>
+                                                <div class="card-body">
+                                                    <div class="mb-3">
+                                                        <input type="hidden" name="idDireccion" id="idDireccionEdit"/>
+                                                        <input type="hidden" name="idPersona" id="idPersonaEdit"/>
+                                                        <input type="hidden" name="idUsuario" id="idUsuarioEdit"/>
+                                                        <div class="row">
+                                                            <div class="form-group col-6">
+                                                                <div class="form-check form-check-inline">
+                                                                    <input class="form-check-input" type="radio" name="tipoPersona" id="usuarioTipoEdit" value="1" required checked>
+                                                                    <label class="form-check-label" for="usuarioTipoEdit">Usuario</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-4">
+                                                                <label for="nombreUsuarioEdit" class="col-form-label">Nombre:</label>
+                                                                <input type="text" name="nombreUsuario" class="form-control" id="nombreUsuarioEdit" required>
+                                                            </div>
+                                                            <div class="col-5">
+                                                                <label for="apellidosUsuarioEdit" class="col-form-label">Apellidos:</label>
+                                                                <input type="text" name="apellidosUsuario" class="form-control" id="apellidosUsuarioEdit" required>
+                                                            </div>
+                                                            <div class="col-3">
+                                                                <label for="nacimientoUsuarioEdit" class="col-form-label">Fecha de nacimiento:</label>
+                                                                <input type="date" name="nacimientoUsuario" class="form-control" id="nacimientoUsuarioEdit"  required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-4">
+                                                                <label for="emailUsuarioEdit" class="col-form-label">Correo Electrónico:</label>
+                                                                <input type="email" name="emailUsuario" class="form-control" id="emailUsuarioEdit" required>
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <label for="estadoUsuarioEdit" class="col-form-label">Estado:</label>
+                                                                <select class="form-control" name="estadoUsuario" id="estadoUsuarioEdit" required="required">
+                                                                    <option value="">Selecciona un estado...</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <label for="ciudadUsuarioEdit" class="col-form-label">Ciudad:</label>
+                                                                <select class="form-control" name="ciudadUsuario2" id="ciudadUsuarioEdit"
+                                                                        required="required">
+                                                                    <option value="">Selecciona una ciudad...</option>
+                                                                </select>
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-5">
+                                                                <label for="calleUsuarioEdit" class="col-form-label">Calle:</label>
+                                                                <input type="text" name="calleUsuario" class="form-control" id="calleUsuarioEdit"  required>
+                                                            </div>
+                                                            <div class="col-5">
+                                                                <label for="coloniaUsuarioEdit" class="col-form-label">Colonia:</label>
+                                                                <input type="text" name="coloniaUsuario" class="form-control" id="coloniaUsuarioEdit"  required>
+                                                            </div>
+                                                            <div class="col-2">
+                                                                <label for="numeroUsuarioEdit" class="col-form-label">Numero #:</label>
+                                                                <input type="number" name="numeroUsuario" class="form-control" id="numeroUsuarioEdit" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-3">
+                                                                <label for="codigoUsuarioEdit" class="col-form-label">Código postal:</label>
+                                                                <input type="number" name="codigoUsuario" class="form-control" id="codigoUsuarioEdit" minlength="5" maxlength="5" required>
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <label for="userUsuarioEdit" class="col-form-label">Usuario:</label>
+                                                                <input type="text" name="userUsuario" class="form-control" id="userUsuarioEdit"  required>
+                                                            </div>
+                                                            <div class="col-5">
+                                                                <label for="passwordUsuarioEdit" class="col-form-label">Contraseña:</label>
+                                                                <input type="password" name="passwordUsuario" class="form-control" id="passwordUsuarioEdit"  required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-6 offset-md-1">
+                                                                <div id="rolesConsultados">
+
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-5">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" id="cerrarUsuarioEditBtn" class="btn btn-secondary"
+                                                    data-dismiss="modal">Cerrar
+                                            </button>
+                                            <button type="submit" class="btn btn-primary">
+                                                Actualizar
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- =====================================================-->
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="col-12">
+                        <div class="card mt-5">
+                            <h5 class="card-header bg-dark text-white">Listado de Clientes</h5>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="tablaClientes">
+                                        <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Nombre</th>
+                                            <th>Apellidos</th>
+                                            <th>Correo electrónico</th>
+                                            <th>Editar</th>
+                                            <th>Eliminar</th>
+                                        </tr>
+                                        </thead>
+                                        <tfoot>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Nombre</th>
+                                            <th>Apellidos</th>
+                                            <th>Correo electrónico</th>
+                                            <th>Editar</th>
+                                            <th>Eliminar</th>
+                                        </tr>
+                                        </tfoot>
+
+                                        <tbody>
+                                        <tr th:each="cliente, index : ${clientesCompletos}">
+                                            <td th:text="${index.count}"></td>
+                                            <td th:text="${cliente[14]}"></td>
+                                            <td th:text="${cliente[15]}"></td>
+                                            <td th:text="${cliente[13]}"></td>
+
+                                            <td class="center-cell">
+                                               <!-- <a class="btn btn-outline-info" data-toggle="modal"
+                                                   th:data-target="'#modalC'+${cliente[17]}"><i
+                                                        class="bi bi-pencil"></i></a> -->
+
+                                                <a class="btn btn-outline-info" data-toggle="modal"
+                                                   data-target="#modalClienteEdit" th:id="'clienteBtn_'+${cliente[17]}"><i
+                                                        class="bi bi-pencil"></i></a>
+
+                                                <!-- Modal -->
+                                                <div class="modal fade bd-example-modal-lg"
+                                                     th:id="'modalC'+ ${cliente[17]}" tabindex="-1" role="dialog"
+                                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog modal-lg" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close" data-dismiss="modal"
+                                                                        aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <form th:action="@{/guardar/persona}" method="post">
+                                                                <div class="modal-body">
+                                                                    <div class="card textoIzquierda">
+                                                                        <h5 class="card-header bg-dark text-white">
+                                                                            Editar Cliente</h5>
+                                                                        <div class="card-body">
+                                                                            <div class="mb-3">
+                                                                                <input type="hidden" name="idDireccion" th:value="${cliente[5]}"/>
+                                                                                <input type="hidden" name="idPersona" th:value="${cliente[11]}"/>
+                                                                                <input type="hidden" name="idUsuario" th:value="${cliente[17]}"/>
+                                                                                <div class="row">
+                                                                                    <div class="form-group col-6">
+                                                                                        <div class="form-check form-check-inline">
+                                                                                            <input class="form-check-input" type="radio" name="tipoPersona" id="inlineRadio" value="2" required checked>
+                                                                                            <label class="form-check-label" for="inlineRadio1">Cliente</label>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="row">
+                                                                                    <div class="col-4">
+                                                                                        <label for="nombreUsuario2" class="col-form-label">Nombre:</label>
+                                                                                        <input type="text" name="nombreUsuario" class="form-control" id="nombreUsuario2" th:value="${cliente[14]}" required>
+                                                                                    </div>
+                                                                                    <div class="col-5">
+                                                                                        <label for="apellidosUsuario2" class="col-form-label">Apellidos:</label>
+                                                                                        <input type="text" name="apellidosUsuario" class="form-control" id="apellidosUsuario2" th:value="${cliente[15]}" required>
+                                                                                    </div>
+                                                                                    <div class="col-3">
+                                                                                        <label for="nacimientoUsuario2" class="col-form-label">Fecha de nacimiento:</label>
+                                                                                        <input type="date" name="nacimientoUsuario" class="form-control" id="nacimientoUsuario2" th:value="${cliente[12]}" required>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="row">
+                                                                                    <div class="col-4">
+                                                                                        <label for="emailUsuario2" class="col-form-label">Correo Electrónico:</label>
+                                                                                        <input type="email" name="emailUsuario" class="form-control" id="emailUsuario2" th:value="${cliente[13]}" required>
+                                                                                    </div>
+                                                                                    <div class="col-4">
+                                                                                        <label for="estadoUsuario" class="col-form-label">Estado:</label>
+                                                                                        <select class="form-control" name="estadoUsuario" th:id="'estadoUsuario2_'+${index.count}" required="required">
+                                                                                            <option value="">Selecciona un estado...</option>
+                                                                                            <option th:each="estado: ${estados}" th:text="${estado.state_name}"
+                                                                                                    th:value="${estado.id_state}" th:id="${index.count}+'__'+${estado.id_state}" th:selected="${estado.id_state eq cliente[0]}"></option>
+                                                                                        </select>
+                                                                                    </div>
+                                                                                    <div class="col-4">
+                                                                                        <label for="ciudadUsuario2" class="col-form-label">Ciudad:</label>
+                                                                                        <select class="form-control" name="ciudadUsuario2" th:id="'ciudad22Usuario_'+${index.count}"
+                                                                                                required="required">
+                                                                                            <option value="">Selecciona una ciudad...</option>
+                                                                                        </select>
+                                                                                        <!---->
+                                                                                        <select class="form-control" name="ciudadUsuario" th:id="'ciudadUsuario2_'+${index.count}">
+                                                                                            <option th:each="ciudad2: ${ciudades}" th:text="${ciudad2.city_name}"
+                                                                                                    th:value="${ciudad2.id_city}"
+                                                                                                    th:class="${index.count}+'__'+${ciudad2.id_state.id_state}"
+                                                                                                    th:selected="${ciudad2.id_city eq cliente[2]}"></option>
+                                                                                        </select>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="row">
+                                                                                    <div class="col-5">
+                                                                                        <label for="calleUsuario2" class="col-form-label">Calle:</label>
+                                                                                        <input type="text" name="calleUsuario" class="form-control" id="calleUsuario2" th:value="${cliente[9]}" required>
+                                                                                    </div>
+                                                                                    <div class="col-5">
+                                                                                        <label for="coloniaUsuario2" class="col-form-label">Colonia:</label>
+                                                                                        <input type="text" name="coloniaUsuario" class="form-control" id="coloniaUsuario2" th:value="${cliente[6]}" required>
+                                                                                    </div>
+                                                                                    <div class="col-2">
+                                                                                        <label for="numeroUsuario2" class="col-form-label">Numero #:</label>
+                                                                                        <input type="number" name="numeroUsuario" class="form-control" id="numeroUsuario2" th:value="${cliente[7]}" required>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="row">
+                                                                                    <div class="col-3">
+                                                                                        <label for="codigoUsuario2" class="col-form-label">Código postal:</label>
+                                                                                        <input type="number" name="codigoUsuario" class="form-control" id="codigoUsuario2" minlength="5" maxlength="5" th:value="${cliente[8]}" required>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary"
+                                                                            data-dismiss="modal">Cerrar
+                                                                    </button>
+                                                                    <button type="submit" class="btn btn-primary">
+                                                                        Actualizar
+                                                                    </button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="center-cell">
+                                                <a th:href="@{'/eliminar/persona'+'/'+${cliente[5]}}"
+                                                   class="btn btn-outline-danger"><i class="bi bi-trash"></i></a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal fade bd-example-modal-lg"
+                             id="modalClienteEdit" tabindex="-1" role="dialog"
+                             aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal"
+                                                aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <form id="clienteFormEdit" method="post">
+                                        <div class="modal-body">
+                                            <div class="card textoIzquierda">
+                                                <h5 class="card-header bg-dark text-white">
+                                                    Editar Cliente</h5>
+                                                <div class="card-body">
+                                                    <div class="mb-3">
+                                                        <input type="hidden" name="idDireccion" id="idDireccionEdit2"/>
+                                                        <input type="hidden" name="idPersona" id="idPersonaEdit2"/>
+                                                        <input type="hidden" name="idUsuario" id="idUsuarioEdit2"/>
+                                                        <div class="row">
+                                                            <div class="form-group col-6">
+                                                                <div class="form-check form-check-inline">
+                                                                    <input class="form-check-input" type="radio" name="tipoPersona" id="inlineRadio22" value="2" required checked>
+                                                                    <label class="form-check-label" for="inlineRadio">Cliente</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-4">
+                                                                <label for="nombreUsuarioEdit2" class="col-form-label">Nombre:</label>
+                                                                <input type="text" name="nombreUsuario" class="form-control" id="nombreUsuarioEdit2" required>
+                                                            </div>
+                                                            <div class="col-5">
+                                                                <label for="apellidosUsuarioEdit2" class="col-form-label">Apellidos:</label>
+                                                                <input type="text" name="apellidosUsuario" class="form-control" id="apellidosUsuarioEdit2"  required>
+                                                            </div>
+                                                            <div class="col-3">
+                                                                <label for="nacimientoUsuarioEdit2" class="col-form-label">Fecha de nacimiento:</label>
+                                                                <input type="date" name="nacimientoUsuario" class="form-control" id="nacimientoUsuarioEdit2" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-4">
+                                                                <label for="emailUsuarioEdit2" class="col-form-label">Correo Electrónico:</label>
+                                                                <input type="email" name="emailUsuario" class="form-control" id="emailUsuarioEdit2"  required>
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <label for="estadoUsuarioEdit2" class="col-form-label">Estado:</label>
+                                                                <select class="form-control" name="estadoUsuario" id="estadoUsuarioEdit2" required="required">
+                                                                    <option value="">Selecciona un estado...</option>
+
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <label for="ciudadUsuarioEdit2" class="col-form-label">Ciudad:</label>
+                                                                <select class="form-control" name="ciudadUsuario2" id="ciudadUsuarioEdit2"
+                                                                        required="required">
+                                                                    <option value="">Selecciona una ciudad...</option>
+                                                                </select>
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-5">
+                                                                <label for="calleUsuarioEdit2" class="col-form-label">Calle:</label>
+                                                                <input type="text" name="calleUsuario" class="form-control" id="calleUsuarioEdit2"  required>
+                                                            </div>
+                                                            <div class="col-5">
+                                                                <label for="coloniaUsuarioEdit2" class="col-form-label">Colonia:</label>
+                                                                <input type="text" name="coloniaUsuario" class="form-control" id="coloniaUsuarioEdit2" required>
+                                                            </div>
+                                                            <div class="col-2">
+                                                                <label for="numeroUsuarioEdit2" class="col-form-label">Numero #:</label>
+                                                                <input type="number" name="numeroUsuario" class="form-control" id="numeroUsuarioEdit2" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-3">
+                                                                <label for="codigoUsuarioEdit2" class="col-form-label">Código postal:</label>
+                                                                <input type="number" name="codigoUsuario" class="form-control" id="codigoUsuarioEdit2" minlength="5" maxlength="5"  required>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" id="cerrarClienteEditBtn" class="btn btn-secondary"
+                                                    data-dismiss="modal">Cerrar
+                                            </button>
+                                            <button type="submit" class="btn btn-primary">
+                                                Actualizar
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="card mb-4 mt-5">
+                            <h5 class="card-header bg-dark text-white">Listado de Estados</h5>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="dataTable">
+                                        <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Estado</th>
+                                            <th>Editar</th>
+                                            <th>Eliminar</th>
+                                        </tr>
+                                        </thead>
+                                        <tfoot>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Estado</th>
+                                            <th>Editar</th>
+                                            <th>Eliminar</th>
+                                        </tr>
+                                        </tfoot>
+
+                                        <tbody>
+                                        <tr th:each="estado, index : ${estadosDirecciones}">
+                                            <td th:text="${index.count}"></td>
+                                            <td th:text="${estado[1]}"></td>
+                                            <td class="center-cell">
+                                                <!--th:href="@{'/estados/editar'+'/'+${estado.id_state}}" -->
+                                                <a class="btn btn-outline-info" data-toggle="modal"
+                                                   th:data-target="'#modal'+${estado[0]}"><i
+                                                        class="bi bi-pencil"></i></a>
+
+                                                <!-- Modal -->
+                                                <div class="modal fade bd-example-modal-sm"
+                                                     th:id="'modal'+ ${estado[0]}" tabindex="-1" role="dialog"
+                                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close" data-dismiss="modal"
+                                                                        aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <form th:action="@{/guardar/estado}" method="post">
+                                                                <div class="modal-body">
+                                                                    <div class="card textoIzquierda">
+                                                                        <h5 class="card-header bg-dark text-white">
+                                                                            Editar
+                                                                            Estado</h5>
+                                                                        <div class="card-body">
+                                                                            <div class="mb-3">
+                                                                                <input type="hidden" name="idEstado"
+                                                                                       th:value="${estado[0]}"/>
+                                                                                <label for="nombreEstado"
+                                                                                       class="col-form-label">Nombre del
+                                                                                    Estado:</label>
+                                                                                <input type="text" name="nombreEstado"
+                                                                                       class="form-control"
+                                                                                       id="nombreEstado"
+                                                                                       th:value="${estado[1]}"
+                                                                                       required>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary"
+                                                                            data-dismiss="modal">Cerrar
+                                                                    </button>
+                                                                    <button type="submit" class="btn btn-primary">
+                                                                        Actualizar
+                                                                    </button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <th:block th:if="${estado[2] > 0}">
+                                                <td class="center-cell">
+                                                    <span class="d-inline-block" tabindex="0" data-toggle="tooltip"
+                                                          title="Estado asignado a una persona">
+                                                     <a class="btn btn-outline-danger disabled-link">
+                                                         <i class="bi bi-trash"></i></a>
+                                                    </span>
+                                                </td>
+                                            </th:block>
+                                            <th:block th:if="${estado[2] == 0}">
+                                                <td class="center-cell">
+                                                    <a th:href="@{'/eliminar/estado'+'/'+${estado[0]}}"
+                                                       class="btn btn-outline-danger"><i class="bi bi-trash"></i></a>
+                                                </td>
+                                            </th:block>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="card mb-4 mt-5">
+                            <h5 class="card-header bg-dark text-white">Listado de Ciudades</h5>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="tablaCiudades">
+                                        <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Ciudad</th>
+                                            <th>Editar</th>
+                                            <th>Eliminar</th>
+                                        </tr>
+                                        </thead>
+                                        <tfoot>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Ciudad</th>
+                                            <th>Editar</th>
+                                            <th>Eliminar</th>
+                                        </tr>
+                                        </tfoot>
+
+                                        <tbody>
+                                        <tr th:each="ciudad, index : ${ciudadesDirecciones}">
+                                            <td th:text="${index.count}"></td>
+                                            <td th:text="${ciudad[1]}"></td>
+                                            <td class="center-cell">
+                                                <a class="btn btn-outline-info" data-toggle="modal"
+                                                   th:data-target="'#modalCd'+${ciudad[0]}"><i
+                                                        class="bi bi-pencil"></i></a>
+
+                                                <!-- Modal -->
+                                                <div class="modal fade bd-example-modal-sm"
+                                                     th:id="'modalCd'+ ${ciudad[0]}" tabindex="-1" role="dialog"
+                                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close" data-dismiss="modal"
+                                                                        aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <form th:action="@{/guardar/ciudad}" method="post">
+                                                                <div class="modal-body">
+                                                                    <div class="card textoIzquierda">
+                                                                        <h5 class="card-header bg-dark text-white">
+                                                                            Editar
+                                                                            Ciudad</h5>
+                                                                        <div class="card-body">
+                                                                            <div class="mb-3">
+                                                                                <input type="hidden" name="idCiudad" th:value="${ciudad[0]}"/>
+                                                                                <label for="nombreCiudad" class="col-form-label">Estado:</label>
+                                                                                <select class="form-control" name="listaEstados" required="required">
+                                                                                    <option value="">Selecciona un estado...</option>
+                                                                                    <option th:each="estado: ${estados}" th:text="${estado.state_name}" th:value="${estado.id_state}" th:selected="${estado.id_state eq ciudad[3]}">
+                                                                                </select>
+                                                                                <label for="nombreCiudad"
+                                                                                       class="col-form-label">Nombre de
+                                                                                    la Ciudad:</label>
+                                                                                <input type="text" name="nombreCiudad"
+                                                                                       class="form-control"
+                                                                                       id="nombreCiudad2"
+                                                                                       th:value="${ciudad[1]}" required>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary"
+                                                                            data-dismiss="modal">Cerrar
+                                                                    </button>
+                                                                    <button type="submit" class="btn btn-primary">
+                                                                        Actualizar
+                                                                    </button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <th:block th:if="${ciudad[2] > 0}">
+                                                <td class="center-cell">
+                                                    <span class="d-inline-block" tabindex="0" data-toggle="tooltip"
+                                                          title="Ciudad asignada a una persona">
+                                                     <a class="btn btn-outline-danger disabled-link">
+                                                         <i class="bi bi-trash"></i></a>
+                                                    </span>
+                                                </td>
+                                            </th:block>
+                                            <th:block th:if="${ciudad[2] == 0}">
+                                                <td class="center-cell">
+                                                    <a th:href="@{'/eliminar/ciudad'+'/'+${ciudad[0]}}"
+                                                       class="btn btn-outline-danger"><i class="bi bi-trash"></i></a>
+                                                </td>
+                                            </th:block>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="card mb-4">
+                            <h5 class="card-header bg-dark text-white">Listado de Roles</h5>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="tablaRoles">
+                                        <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Rol</th>
+                                            <th>Editar</th>
+                                            <th>Eliminar</th>
+                                        </tr>
+                                        </thead>
+                                        <tfoot>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Rol</th>
+                                            <th>Editar</th>
+                                            <th>Eliminar</th>
+                                        </tr>
+                                        </tfoot>
+
+                                        <tbody>
+                                        <tr th:each="role, index : ${rolesUsuario}">
+                                            <td th:text="${index.count}"></td>
+                                            <td th:text="${role[1]}"></td>
+                                            <td class="center-cell">
+                                                <a class="btn btn-outline-info" data-toggle="modal"
+                                                   th:data-target="'#modalRole'+${role[0]}"><i
+                                                        class="bi bi-pencil"></i></a>
+
+                                                <!-- Modal -->
+                                                <div class="modal fade bd-example-modal-sm"
+                                                     th:id="'modalRole'+ ${role[0]}" tabindex="-1" role="dialog"
+                                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close" data-dismiss="modal"
+                                                                        aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <form th:action="@{/guardar/rol}" method="post">
+                                                                <div class="modal-body">
+                                                                    <div class="card textoIzquierda">
+                                                                        <h5 class="card-header bg-dark text-white">
+                                                                            Editar Rol</h5>
+                                                                        <div class="card-body">
+                                                                            <div class="mb-3">
+                                                                                <input type="hidden" name="idRol"
+                                                                                       th:value="${role[0]}"/>
+                                                                                <label for="nombreRol"
+                                                                                       class="col-form-label">Nombre del
+                                                                                    Rol:</label>
+                                                                                <input type="text" name="nombreRol"
+                                                                                       class="form-control"
+                                                                                       id="nombreRole"
+                                                                                       th:value="${role[1]}"
+                                                                                       required>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary"
+                                                                            data-dismiss="modal">Cerrar
+                                                                    </button>
+                                                                    <button type="submit" class="btn btn-primary">
+                                                                        Actualizar
+                                                                    </button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <th:block th:if="${role[2] > 0}">
+                                                <td class="center-cell">
+                                                    <span class="d-inline-block" tabindex="0" data-toggle="tooltip"
+                                                          title="Rol asignado a una usuario">
+                                                     <a class="btn btn-outline-danger disabled-link">
+                                                         <i class="bi bi-trash"></i></a>
+                                                    </span>
+                                                </td>
+                                            </th:block>
+                                            <th:block th:if="${role[2] == 0}">
+                                                <td class="center-cell">
+                                                    <a th:href="@{'/eliminar/role'+'/'+${role[0]}}"
+                                                       class="btn btn-outline-danger"><i class="bi bi-trash"></i></a>
+                                                </td>
+                                            </th:block>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="registroProductos">
+            <div class="container">
+                <div class="row mt-5">
+                    <div class="col-3">
+                        <div class="card">
+                            <h5 class="card-header bg-dark text-white">Registrar Categoria</h5>
+                            <div class="card-body">
+                                <form th:action="@{/guardar/categoria}" method="post">
+                                    <div class="mb-3">
+                                        <input type="hidden" name="idCategoria" th:value="0"/>
+                                        <label for="nombreCategoria" class="col-form-label">Nombre de la Categoria</label>
+                                        <input type="text" name="nombreCategoria" class="form-control" id="nombreCategoria" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Guardar</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="card">
+                            <h5 class="card-header bg-dark text-white">Registrar Proveedor</h5>
+                            <div class="card-body">
+                                <form th:action="@{/guardar/proveedor}" method="post">
+                                    <div class="mb-3">
+                                        <label for="categoriaProducto" class="col-form-label">Categoria:</label>
+                                        <select class="form-control" name="categoriaProducto" id="categoriaProducto"
+                                                required="required">
+                                            <option value="">Selecciona una categoria...</option>
+                                            <option th:each="categoria: ${categorias}" th:text="${categoria.category_name}"
+                                                    th:value="${categoria.id_category}"></option>
+                                        </select>
+                                        <input type="hidden" name="idProveedor" th:value="0"/>
+                                        <label for="nombreProveedor" class="col-form-label">Nombre del Proveedor</label>
+                                        <input type="text" name="nombreProveedor" class="form-control" id="nombreProveedor" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Guardar</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="card">
+                            <h5 class="card-header bg-dark text-white">Registrar Producto</h5>
+                            <div class="card-body">
+                                <form th:action="@{guardar/producto/}" method="post">
+                                    <div class="mb-3">
+                                        <input type="hidden" name="idProducto" th:value="0">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <label for="nombreProducto" class="col-form-label">Producto:</label>
+                                                <input type="text" name="nombreProducto" class="form-control" id="nombreProducto" required>
+                                            </div>
+                                            <div class="col-6">
+                                                <label for="precioProducto" class="col-form-label">Precio:</label>
+                                                <input type="number" name="precioProducto" step="0.01" class="form-control" id="precioProducto" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-6">
+                                                <label for="stockProducto" class="col-form-label">Stock:</label>
+                                                <input type="number" name="stockProducto" class="form-control" id="stockProducto" required>
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label for="codigoProducto" class="col-form-label">Codigo:</label>
+                                                <input type="text" name="codigoProducto" class="form-control" id="codigoProducto" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+
+                                            <div class="form-group col-md-6">
+                                                <label for="categoriaProducto2" class="col-form-label">Categoria:</label>
+                                                <select class="form-control" name="categoriaProducto" id="categoriaProducto2"
+                                                        required="required">
+                                                    <option value="">Selecciona una categoria...</option>
+                                                    <!--<option th:each="categoria: ${categorias}" th:text="${categoria.category_name}"
+                                                            th:value="${categoria.id_category}"></option> -->
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label for="proveedorProducto" class="col-form-label">Proveedor:</label>
+                                                <select class="form-control" name="proveedorProducto" id="proveedorProducto"
+                                                        required="required">
+                                                    <option value="">Selecciona un proveedor...</option>
+                                                   <!-- <option th:each="proveedor: ${proveedores}" th:text="${proveedor.supplier_name}"
+                                                            th:value="${proveedor.id_supplier}"></option> -->
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-12">
+                                                <label for="descripcionProducto" class="col-form-label">Descripción:</label>
+                                                <input type="text" name="descripcionProducto" class="form-control" id="descripcionProducto" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Guardar</button>
+                                </form>
+                            </div>
+                        </div>
+                        <br/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="consultaProductos">
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card mb-4 mt-5">
+                        <h5 class="card-header bg-dark text-white">Listado de Productos</h5>
+                        <div class="card-body">
+                            <div class="table-responsive" id="divProductos">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="card mb-4 mt-5">
+                        <h5 class="card-header bg-dark text-white">Listado de Categorias</h5>
+                        <div class="card-body">
+                            <div class="table-responsive" id="divCategorias">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="card mb-4 mt-5">
+                        <h5 class="card-header bg-dark text-white">Listado de Proveedores</h5>
+                        <div class="card-body">
+                            <div class="table-responsive" id="divProveedores">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="editarProducto" tabindex="-1" aria-labelledby="editarProducto" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel"></h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form id="editarProductoForm">
+                        <div class="modal-body">
+                            <div class="card">
+                                <h5 class="card-header bg-dark text-white">Editar Producto</h5>
+                                <div class="card-body">
+
+                                        <div class="mb-3">
+                                            <input type="hidden" name="idProducto" id="idProductoEdit">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <label for="nombreProducto" class="col-form-label">Producto:</label>
+                                                    <input type="text" name="nombreProducto" class="form-control" id="nombreProductoEdit" required>
+                                                </div>
+                                                <div class="col-6">
+                                                    <label for="precioProducto" class="col-form-label">Precio:</label>
+                                                    <input type="number" name="precioProducto" step="0.01" class="form-control" id="precioProductoEdit" required>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-group col-md-6">
+                                                    <label for="stockProducto" class="col-form-label">Stock:</label>
+                                                    <input type="number" name="stockProducto" class="form-control" id="stockProductoEdit" required>
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="codigoProducto" class="col-form-label">Codigo:</label>
+                                                    <input type="text" name="codigoProducto" class="form-control" id="codigoProductoEdit" required>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+
+                                                <div class="form-group col-md-6">
+                                                    <label for="categoriaProducto2" class="col-form-label">Categoria:</label>
+                                                    <select class="form-control" name="categoriaProducto" id="categoriaProductoEdit"
+                                                            required="required">
+
+                                                        <!--<option th:each="categoria: ${categorias}" th:text="${categoria.category_name}"
+                                                                th:value="${categoria.id_category}"></option> -->
+                                                    </select>
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="proveedorProducto" class="col-form-label">Proveedor:</label>
+                                                    <select class="form-control" name="proveedorProducto" id="proveedorProductoEdit"
+                                                            required="required">
+
+                                                        <!-- <option th:each="proveedor: ${proveedores}" th:text="${proveedor.supplier_name}"
+                                                                 th:value="${proveedor.id_supplier}"></option> -->
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-group col-md-12">
+                                                    <label for="descripcionProducto" class="col-form-label">Descripción:</label>
+                                                    <input type="text" name="descripcionProducto" class="form-control" id="descripcionProductoEdit" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Actualizar</button>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal editar categoria -->
+
+            <div class="modal fade" id="editarCategoria" tabindex="-1" aria-labelledby="editarCategoria" aria-hidden="true">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabe"></h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form id="editarCategoriaForm">
+                            <div class="modal-body">
+                                <div class="card">
+                                    <h5 class="card-header bg-dark text-white">Editar Categoria</h5>
+                                    <div class="card-body">
+                                        <div class="mb-3">
+                                            <input type="hidden" name="idCategoria" id="idCategoriaEdit">
+                                            <div class="form-row">
+                                                <div class="form-group col-md-12">
+                                                    <label for="nombreCategoria" class="col-form-label">Categoria:</label>
+                                                    <input type="text" name="nombreCategoria" class="form-control" id="nombreCategoriaEdit" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                <button type="submit" class="btn btn-primary">Actualizar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal editar proveedor -->
+
+            <div class="modal fade" id="editarProveedor" tabindex="-1" aria-labelledby="editarProveedor" aria-hidden="true">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLab"></h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form id="editarProveedorForm">
+                            <div class="modal-body">
+                                <div class="card">
+                                    <h5 class="card-header bg-dark text-white">Editar Proveedor</h5>
+                                    <div class="card-body">
+                                        <div class="mb-3">
+                                            <input type="hidden" name="idProveedorEdit" id="idProveedorEdit">
+                                            <div class="form-row">
+                                                <div class="form-group col-md-12">
+                                                    <label for="categoriaProducto2" class="col-form-label">Categoria:</label>
+                                                    <select class="form-control" name="categoriaProveedor" id="categoriaProveedorEdit"
+                                                            required="required">
+                                                    </select>
+                                                    <label for="nombreProveedor" class="col-form-label">Proveedor:</label>
+                                                    <input type="text" name="nombreProveedor" class="form-control" id="nombreProveedorEdit" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                <button type="submit" class="btn btn-primary">Actualizar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script type="text/javascript" th:src="@{/vendor/jquery/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<script type="text/javascript" th:src="@{/vendor/jquery-easing/jquery.easing.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/sb-admin-2.min.js}"></script>
+<script type="text/javascript" th:src="@{/vendor/datatables/jquery.dataTables.min.js}"></script>
+<script type="text/javascript" th:src="@{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/demo/datatables-demo.js}"></script>
+
+<script type="text/javascript" th:src="@{/js/jquery-3.7.1.min.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script type="text/javascript" th:src="@{/js/funciones.js}"></script>
+
+<script src="https://cdn.datatables.net/v/bs5/dt-1.13.8/b-2.4.2/b-colvis-2.4.2/datatables.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+<script>
+    $(document).ready(function(){
+
+
+    var registro_exitoso = "";
+         registro_exitoso = "[[${success}]]";
+
+         if(registro_exitoso != ""){
+
+            Swal.fire({
+                  title: registro_exitoso+"",
+                  icon: "success"
+                });
+         }
+
+    //var ciudadJson = JSON.parse([[${ciudadJson}]]);
+    //var text = ciudadJson.replace(/&quot;/g, '\\"');
+
+    });
+</script>
+
+</script>
+<script th:inline="javascript">
+    //var nameJs = /*[[${name}]]*/;
+</script>
+
+</body>
+</html>
