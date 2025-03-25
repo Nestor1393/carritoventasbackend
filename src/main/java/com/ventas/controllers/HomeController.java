@@ -8,7 +8,6 @@ import com.ventas.entities.*;
 import com.ventas.repository.StateRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import jdk.swing.interop.SwingInterOpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.Banner;
 import org.springframework.boot.json.GsonJsonParser;

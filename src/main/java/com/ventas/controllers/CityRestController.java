@@ -4,7 +4,6 @@ import com.ventas.Service.ICityService;
 import com.ventas.Service.IStateService;
 import com.ventas.entities.City;
 import com.ventas.entities.State;
-import jdk.swing.interop.SwingInterOpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -5,7 +5,6 @@ import com.ventas.repository.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
-import jdk.swing.interop.SwingInterOpUtils;
 import org.hibernate.boot.model.source.spi.SingularAttributeSourceToOne;
 import org.hibernate.cfg.AvailableSettings;
 import org.springframework.beans.factory.annotation.Autowired;
