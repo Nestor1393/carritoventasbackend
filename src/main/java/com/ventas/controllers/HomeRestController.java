@@ -74,7 +74,7 @@ public class HomeRestController {
     }
     */
 
-    @CrossOrigin(origins = {"http://localhost:3000/", "https://5a87-2806-2f0-a300-ffe8-60bf-c0c-e5fa-7fd9.ngrok-free.app"})
+    @CrossOrigin(origins = {"http://localhost:3000/", "https://5a87-2806-2f0-a300-ffe8-60bf-c0c-e5fa-7fd9.ngrok-free.app", "https://taupe-crisp-957656.netlify.app/login"})
     @RequestMapping(value = "/iniciar/sesion", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Object>> mostrarProductos(Model model, @RequestBody Map<String, String> body) {
         Map<String, Object> respuesta = new HashMap<>();
