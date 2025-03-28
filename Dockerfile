@@ -1,14 +1,18 @@
-# Usar la imagen base de OpenJDK
+# Usa OpenJDK como base
 FROM openjdk:17-jdk-slim
 
-# Establecer el directorio de trabajo dentro del contenedor
+# Define el directorio de trabajo
 WORKDIR /app
 
-# Copiar el archivo JAR generado por Maven
-COPY target/*.jar app.jar
+# Copia el código fuente al contenedor
+COPY . .
 
-# Exponer el puerto en el que corre Spring Boot
-EXPOSE 8081
+# Compila el proyecto
+RUN ./mvnw clean package -DskipTests
 
-# Ejecutar la aplicación
+# Copia el JAR generado al contenedor
+RUN cp target/*.jar app.jar
+
+# Comando para ejecutar la aplicación
 CMD ["java", "-jar", "app.jar"]
+
