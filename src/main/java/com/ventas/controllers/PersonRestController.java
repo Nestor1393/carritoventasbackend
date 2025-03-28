@@ -40,7 +40,7 @@ public class PersonRestController {
     }
 
 
-    @CrossOrigin(origins = {"http://localhost:3000/", "https://5a87-2806-2f0-a300-ffe8-60bf-c0c-e5fa-7fd9.ngrok-free.app"})
+    @CrossOrigin(origins = {"http://localhost:3000/","https://carritoventasfrontend-production.up.railway.app"})
     @PostMapping("guardar/usuario/facebook")
         public Long guardarUsuarioDeFacebook(@RequestBody Map<String, Object> facebookData){
 
@@ -81,7 +81,7 @@ public class PersonRestController {
         return idPersona;
     }
 
-    @CrossOrigin(origins = {"http://localhost:3000/", "https://5a87-2806-2f0-a300-ffe8-60bf-c0c-e5fa-7fd9.ngrok-free.app"})
+    @CrossOrigin(origins = {"http://localhost:3000/","https://carritoventasfrontend-production.up.railway.app"})
     @PostMapping("guardar/usuario/google")
     public Long guardarUsuarioDeGoogle(@RequestBody Map<String, Object> googleData){
 
@@ -124,7 +124,7 @@ public class PersonRestController {
     }
 
 
-    @CrossOrigin(origins = "http://localhost:3000/")
+    @CrossOrigin(origins = {"http://localhost:3000/","https://carritoventasfrontend-production.up.railway.app"})
     @GetMapping("consultar/usuarios/mas/ventas")
     public List<Object[]> consultarUsuariosConMasVentas(){
 

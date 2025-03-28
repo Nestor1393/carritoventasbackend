@@ -14,7 +14,7 @@ public class CustomerRestController {
     @Autowired
     ICustomerService iCustomerService;
 
-    @CrossOrigin(origins = "http://localhost:3000/")
+    @CrossOrigin(origins = {"http://localhost:3000/","https://carritoventasfrontend-production.up.railway.app"})
     @GetMapping("/consultar/clientes/react")
     public List<Object[]> consultarClientes(){
 

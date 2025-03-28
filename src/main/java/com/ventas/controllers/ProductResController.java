@@ -28,7 +28,7 @@ public class ProductResController {
 
     //CONSULTAR TOP TEN DE PRODUCTOS MÁS VENDIDOS
 
-    @CrossOrigin(origins = "http://localhost:3000/")
+    @CrossOrigin(origins = {"http://localhost:3000/","https://carritoventasfrontend-production.up.railway.app"})
     @GetMapping("/consultar/productos/mas/vendidos")
     public List<Object[]> consultarTopTenProductosVendidos(){
 
@@ -38,7 +38,7 @@ public class ProductResController {
 //=========================================================
     //CONSULTAR TOP TEN DE PRODUCTOS MENOS VENDIDOS
 
-    @CrossOrigin(origins = "http://localhost:3000/")
+    @CrossOrigin(origins = {"http://localhost:3000/","https://carritoventasfrontend-production.up.railway.app"})
     @GetMapping("/consultar/productos/menos/vendidos")
     public List<Object[]> consultarProductosMenosVendidos(){
 
@@ -47,7 +47,7 @@ public class ProductResController {
 
     //=========================================================
     //CONSULTAR TODOS LOS PRODUCTOS DESDE REACT
-    @CrossOrigin(origins = "http://localhost:3000/")
+    @CrossOrigin(origins = {"http://localhost:3000/","https://carritoventasfrontend-production.up.railway.app"})
     @GetMapping("/consultar/todos/productos/react")
     public List<Product> encontrarProductosReact(){
 

@@ -23,7 +23,7 @@ public class CategoryRestController {
 
     //================(ENDPOINT PARA REGISTRAR UNA CATEGORIA MEDIANTE REACT) =================
 
-    @CrossOrigin(origins = "http://localhost:5173")
+    @CrossOrigin(origins = {"http://localhost:3000/","https://carritoventasfrontend-production.up.railway.app"})
     @RequestMapping(value = "/guardar/categoria/react", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object[]> registrarCategoriaReact(Model model, @RequestBody Map<String, String> body) {
 
@@ -66,7 +66,7 @@ public class CategoryRestController {
 
     //============================================================================================
     //CONSULTAR TODAS LAS CATEGORIAS DESDE REACT
-    @CrossOrigin(origins = "http://localhost:5173")
+    @CrossOrigin(origins = {"http://localhost:3000/","https://carritoventasfrontend-production.up.railway.app"})
     @GetMapping("/consultar/todas/categorias/react")
     public List<Category> encontrarCategoriasReact(){
 
@@ -110,7 +110,7 @@ public class CategoryRestController {
     //===================================================================================
     //CONSULTAR CATEGORIA POR ID
 
-    @CrossOrigin(origins = "http://localhost:5173")
+    @CrossOrigin(origins = {"http://localhost:3000/","https://carritoventasfrontend-production.up.railway.app"})
     @GetMapping ("/consultar/categoria/id")
     public ResponseEntity<Category> consultarCategoriaPorId(@RequestParam("idCategoria") Long idCategoria){
 
@@ -126,7 +126,7 @@ public class CategoryRestController {
 
     //=====================================================================================
     //ELIMINAR CATEGORIA DESDE REACT
-    @CrossOrigin(origins = "http://localhost:5173")
+    @CrossOrigin(origins = {"http://localhost:3000/","https://carritoventasfrontend-production.up.railway.app"})
     @DeleteMapping("/eliminar/categoria/react/{idCategoria}")
     public ResponseEntity<Object> eliminarCategoriaReact(@PathVariable Long idCategoria){
         String mensaje = "";
@@ -155,7 +155,7 @@ public class CategoryRestController {
     //===============================================================================
     //ACTUALIZAR
 
-    @CrossOrigin(origins = "http://localhost:5173")
+    @CrossOrigin(origins = {"http://localhost:3000/","https://carritoventasfrontend-production.up.railway.app"})
     @RequestMapping(value = "/actualizar/categoria/react", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Object>> actualizarCategoriaReact(Model model, @RequestBody Map<String, String> body) {
 

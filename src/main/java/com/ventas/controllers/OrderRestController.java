@@ -34,7 +34,7 @@ public class OrderRestController {
     IUserService iUserService;
 
 
-    @CrossOrigin(origins = "http://localhost:3000/")
+    @CrossOrigin(origins = {"http://localhost:3000/","https://carritoventasfrontend-production.up.railway.app"})
     @GetMapping("/encontrar/ventas/mes")
     public List<Object[]> encontrarVentasPorMes() {
         List<Object[]> meses = new ArrayList<Object[]>();
@@ -86,7 +86,7 @@ public class OrderRestController {
         return meses;
     }
 
-    @CrossOrigin(origins = "http://localhost:3000/")
+    @CrossOrigin(origins = {"http://localhost:3000/","https://carritoventasfrontend-production.up.railway.app"})
     @RequestMapping(value = "/consultar/productos/mes", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public List<Object[]> encontrarProductosVendidosPorMes(@RequestBody Map<String, Object> body) {
 
@@ -110,7 +110,7 @@ public class OrderRestController {
     }
 
 
-    @CrossOrigin(origins = "http://localhost:3000/")
+    @CrossOrigin(origins = {"http://localhost:3000/","https://carritoventasfrontend-production.up.railway.app"})
     @RequestMapping(value = "/consultar/producto/uno/mes", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE)
     public List<MesDTO> encontrarProductoMasVendidoPorMes() {
 
@@ -173,7 +173,7 @@ public class OrderRestController {
         return listaMesProductoCantidad;
     }
 
-    @CrossOrigin(origins = "http://localhost:3000/")
+    @CrossOrigin(origins = {"http://localhost:3000/","https://carritoventasfrontend-production.up.railway.app"})
     @GetMapping("/consultar/folio/actual")
     public ResponseEntity<String> encontrarFolioActual() {
 
@@ -182,7 +182,7 @@ public class OrderRestController {
         return ResponseEntity.ok(folio);
     }
 
-    @CrossOrigin(origins = "http://localhost:3000/")
+    @CrossOrigin(origins = {"http://localhost:3000/","https://carritoventasfrontend-production.up.railway.app"})
     @RequestMapping(value = "/consultar/ventas", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Object[]>> consultarVentas(@RequestBody Map<String, Object> body) {
 
@@ -195,7 +195,7 @@ public class OrderRestController {
     }
 
 
-    @CrossOrigin(origins = "http://localhost:3000/")
+    @CrossOrigin(origins = {"http://localhost:3000/","https://carritoventasfrontend-production.up.railway.app"})
     @RequestMapping(value = "/consultar/venta/detalle", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Object[]>> consultarVentaDetalle(@RequestBody Integer idVenta) {
 
@@ -204,7 +204,7 @@ public class OrderRestController {
         return ResponseEntity.ok(ventaDetalle);
     }
 
-    @CrossOrigin(origins = "http://localhost:3000/")
+    @CrossOrigin(origins = {"http://localhost:3000/","https://carritoventasfrontend-production.up.railway.app"})
     @RequestMapping(value = "/guardar/venta", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Object>> guardarVenta(@RequestBody Map<String, Object> body) {
 
