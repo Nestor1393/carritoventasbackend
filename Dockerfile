@@ -7,6 +7,9 @@ WORKDIR /app
 # Copia el código fuente al contenedor
 COPY . .
 
+# 🔧 Da permisos de ejecución a mvnw
+RUN chmod +x mvnw
+
 # Compila el proyecto
 RUN ./mvnw clean package -DskipTests
 
@@ -15,4 +18,3 @@ RUN cp target/*.jar app.jar
 
 # Comando para ejecutar la aplicación
 CMD ["java", "-jar", "app.jar"]
-
